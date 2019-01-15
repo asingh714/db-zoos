@@ -5,6 +5,7 @@ const helmet = require("helmet");
 // const knexConfig = require("./knexfile.js");
 
 const zoosRouter = require("./zoos/zoosRouter")
+const bearsRouter = require("./bears/bearsRouter")
 
 
 const server = express();
@@ -14,6 +15,7 @@ server.use(helmet());
 
 // const db = knex(knexConfig.development);
 server.use("/api/zoos", zoosRouter);
+server.use("/api/bears", bearsRouter);
 
 
 
