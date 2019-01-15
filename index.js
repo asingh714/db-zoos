@@ -42,7 +42,40 @@ server.get("/api/zoos", (req, res) => {
 })
 
 
+// GET - READ with specific ID 
+server.get("/api/zoos/:id", (req, res) => {
+  const id = req.params.id;
 
+  db("zoos")
+  .where({ id: id })
+  .then(zoo => {
+    if(zoo) {
+      res.status(200).json(zoo);
+    } else {
+      res.status(404).json({ error: "The zoo with the specified ID was not found" })
+    }
+  })
+  .catch(err => {
+    res.status(500).json({ error: "This zoo with the specified ID does not exist." })
+  })
+
+})
+
+// DELETE 
+
+server.delete("/api/zoos/:id", (req, res) => {
+  const id = req.params.id;
+
+  db("zoos")
+  .where({ id: id })
+  .del()
+  .then(count => {
+    res.status(200).json(count)
+  })
+  .catch(err => {
+    res.status(500).json({ error: "The zoo could not be removed." })
+  })
+})
 
 
 
