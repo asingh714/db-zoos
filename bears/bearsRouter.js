@@ -26,39 +26,54 @@ router.post("/", (req, res) => {
   }
 });
 
-// GET - READ 
-router.get("/", (req,res) => {
-    db("bears")
+// GET - READ
+router.get("/", (req, res) => {
+  db("bears")
     .then(bears => {
-        res.status(200).json(bears)
+      res.status(200).json(bears);
     })
     .catch(err => {
-        res.status(500).json({ error: "The bears could not be retrieved." })
-    })
-})
+      res.status(500).json({ error: "The bears could not be retrieved." });
+    });
+});
 
 // GET - READ with specific ID
 router.get("/:id", (req, res) => {
-    const id = req.params.id;
-  
-    db("bears")
-      .where({ id: id })
-      .then(bear => {
-        if (bear) {
-          res.status(200).json(bear);
-        } else {
-          res
-            .status(404)
-            .json({ error: "The bear with the specified ID was not found" });
-        }
-      })
-      .catch(err => {
+  const id = req.params.id;
+
+  db("bears")
+    .where({ id: id })
+    .then(bear => {
+      if (bear) {
+        res.status(200).json(bear);
+      } else {
         res
-          .status(500)
-          .json({ error: "This bear with the specified ID does not exist." });
-      });
-  });
-  
+          .status(404)
+          .json({ error: "The bear with the specified ID was not found" });
+      }
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ error: "This bear with the specified ID does not exist." });
+    });
+});
+
+// DELETE
+router.delete("/:id", (req, res) => {
+  const id = req.params.id;
+
+  db("bears")
+    .where({ id: id })
+    .del()
+    .then(count => {
+      res.status(200).json(count);
+    })
+    .catch(err => {
+      res.status(500).json({ error: "The bear could not be removed." });
+    });
+});
+
 
 
 module.exports = router;
