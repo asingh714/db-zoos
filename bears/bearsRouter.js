@@ -74,6 +74,29 @@ router.delete("/:id", (req, res) => {
     });
 });
 
+ // PUT - UPDATE
+ router.put("/:id", (req, res) => {
+    const id = req.params.id;
+    const changes = req.body;
+  
+    db("bears")
+      .where({ id: id })
+      .update(changes)
+      .then(bear => {
+        if (bear) {
+          res.status(200).json(bear);
+        } else {
+          res
+            .status(404)
+            .json({ error: "Please provide an ID and name for the bear." });
+        }
+      })
+      .catch(err => {
+        res.status(500).json({
+          error: "The bear information could not be modified."
+        });
+      });
+  });
 
 
 module.exports = router;
