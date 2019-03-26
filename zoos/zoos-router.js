@@ -44,4 +44,31 @@ router.get("/:id", (req, res) => {
     });
 });
 
+router.post("/", (req, res) => {
+  const zoo = req.body;
+
+  if (!zoo.name) {
+    res.status(400).json({
+      error: "Please provide a name for the zoo."
+    });
+  } else {
+    db("zoos")
+      .insert(zoo)
+      .then(ids => {
+        const id = ids[0];
+        db("zoos")
+          .where({ id })
+          .first()
+          .then(zoo => {
+            res.status(201).json(zoo);
+          })
+          .catch(error => {
+            res.status(500).json({
+              error: "There was an error while saving the zoo to the database."
+            });
+          });
+      });
+  }
+});
+
 module.exports = router;
