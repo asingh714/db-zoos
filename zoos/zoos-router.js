@@ -93,12 +93,33 @@ router.put("/:id", (req, res) => {
         }
       })
       .catch(error => {
-        res.status(500).json(error);
+        res.status(500).json({
+          error: "The zoo information could not be modified."
+        });
       });
   }
 });
 
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
 
-
+  db("zoos")
+    .where({ id })
+    .del()
+    .then(count => {
+      if (count > 0) {
+        res.status(200).json(count);
+      } else {
+        res
+          .status(404)
+          .json({ message: "The zoo with the specified ID does not exist." });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: "The zoo could not be removed."
+      });
+    });
+});
 
 module.exports = router;
