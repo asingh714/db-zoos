@@ -65,4 +65,35 @@ router.post("/", (req, res) => {
   }
 });
 
+router.put("/:id", (req, res) => {
+  const { id } = req.params;
+  const changes = req.body;
+
+  if (!changes.name) {
+    res.status(400).json({
+      error: "Please provide a name for the bear."
+    });
+  } else {
+    db("bears")
+      .where({ id })
+      .update(changes)
+      .then(count => {
+        if (count > 0) {
+          res.status(200).json(count);
+        } else {
+          res
+            .status(404)
+            .json({
+              message: "The bear with the specified ID does not exist."
+            });
+        }
+      })
+      .catch(error => {
+        res.status(500).json({
+          error: "The bear information could not be modified."
+        });
+      });
+  }
+});
+
 module.exports = router;
